@@ -1,62 +1,67 @@
 // API: "https://www.freetogame.com/api/games"
 
-const form = document.querySelector('#searchForm');
-const input = document.querySelector('#searchInput');
+const searchForm = document.querySelector('#searchForm');
+const searchInput = document.querySelector('#searchInput');
 const sortSelect = document.querySelector('#sortSelect');
-const grid = document.querySelector('#gamesGrid');
-const info = document.querySelector('#resultsInfo');
+const gamesGrid = document.querySelector('#gamesGrid');
+const resultsInfo = document.querySelector('#resultsInfo');
 
 let allGames = [];
+const maxGamesPerPage = 24;
 
 async function loadGames() {
-  info.innerHTML = '<span>Showing: </span>Loading...';
+  resultsInfo.innerHTML = '<span>Showing: </span>Loading games...';
   try {
-    const res = await fetch('https://corsproxy.io');
-    allGames = await res.json();
+    const response = await fetch('https://www.freetogame.com/api/games');
+    allGames = await response.json();
     updateView();
-  } catch (err) {
-    info.innerHTML = '<span>Error: </span>Could not load games.';
+  } catch (error) {
+    resultsInfo.innerHTML = '<span>Error: </span>Could not load games.';
+    console.error(error);
   }
 }
 
 function updateView() {
-  const q = input.value.trim().toLowerCase();
-  const sort = sortSelect.value;
+  const searchQuery = searchInput.value.trim().toLowerCase();
+  const sortOrder = sortSelect.value;
 
-  let filtered = allGames.filter(function(g) {
-    return g.title.toLowerCase().includes(q) || g.genre.toLowerCase().includes(q);
-  });
+  const filteredGames = allGames.filter((game) => 
+    game.title.toLowerCase().includes(searchQuery) || 
+    game.genre.trim().toLowerCase().includes(searchQuery)
+  );
 
-  const sorters = {
+  const sortFunctions = {
     'a-z': (a, b) => a.title.localeCompare(b.title),
     'z-a': (a, b) => b.title.localeCompare(a.title),
     'newest': (a, b) => new Date(b.release_date) - new Date(a.release_date),
     'oldest': (a, b) => new Date(a.release_date) - new Date(b.release_date),
   };
 
-  if (sorters[sort]) filtered.sort(sorters[sort]);
+  if (sortFunctions[sortOrder]) filteredGames.sort(sortFunctions[sortOrder]);
 
-  info.innerHTML = `<span>Showing: </span>${filtered.length} games`;
+  const visibleGames = filteredGames.slice(0, maxGamesPerPage);
 
-  grid.innerHTML = filtered.length
-    ? filtered.map(g => `
-        <div class="game-card">
-          ${g.thumbnail 
-            ? `<img src="${g.thumbnail}" alt="${g.title}" loading="lazy">` 
+  resultsInfo.innerHTML = `<span>Showing: </span>${visibleGames.length} of ${filteredGames.length} games`;
+
+  gamesGrid.innerHTML = visibleGames.length
+    ? visibleGames.map((game) => `
+        <a href="${game.game_url}" target="_blank" rel="noopener noreferrer" class="game-card">
+          ${game.thumbnail 
+            ? `<img src="${game.thumbnail}" alt="${game.title}" loading="lazy">` 
             : `<div class="game-card__cover-placeholder">Game Cover <br> Not Available</div>`}
-          <h2 class="game-card__title">${g.title}</h2>
-          <p class="game-card__genre">${g.genre}</p>
-        </div>
+          <h2 class="game-card__title">${game.title}</h2>
+          <p class="game-card__genre">${game.genre.trim()} • ${game.platform}</p>
+        </a>
       `).join('')
-    : `<p>No games found matching "${input.value}".</p>`;
+    : `<p>No games found matching "${searchInput.value}".</p>`;
 }
 
-form.addEventListener('submit', function(e) {
-  e.preventDefault();
+searchForm.addEventListener('submit', (event) => {
+  event.preventDefault();
   updateView();
 });
 
-input.addEventListener('input', updateView);
+searchInput.addEventListener('input', updateView);
 sortSelect.addEventListener('change', updateView);
 
 loadGames();
