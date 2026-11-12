@@ -9,14 +9,28 @@ const resultsInfo = document.querySelector('#resultsInfo');
 let allGames = [];
 const maxGamesPerPage = 24;
 
-async function loadGames() {
+function showLoader() {
   resultsInfo.innerHTML = '<span>Showing: </span>Loading games...';
+  gamesGrid.innerHTML = `
+    <div class="loader-screen" role="status">
+      <div class="rotating-dot-track"></div>
+      <p>Loading games...</p>
+    </div>
+  `;
+}
+
+async function loadGames() {
+  showLoader();
   try {
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     const response = await fetch('https://www.freetogame.com/api/games');
     allGames = await response.json();
     updateView();
   } catch (error) {
     resultsInfo.innerHTML = '<span>Error: </span>Could not load games.';
+    gamesGrid.innerHTML = '<p role="alert">Could not load games. Please try again later.</p>';
     console.error(error);
   }
 }
