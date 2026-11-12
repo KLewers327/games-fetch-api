@@ -3,7 +3,86 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Simplified Games</title>
+    <link rel="icon" href="./assets/fes-logo.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <script href="index.js" defer></script>
   </head>
-  <body></body>
+  <body>
+    <nav class="nav__container">
+      <div class="logo">
+        <img
+          src="./assets/fes-logo.png"
+          alt=""
+          class="logo__ing"
+          width="50px"
+        />
+        <div class="logo__title"><span>Simplified</span> Games</div>
+      </div>
+
+      <!-- SEARCH BAR -->
+
+      <form class="search-form" id="searchForm">
+        <div class="search-form__group">
+          <input
+            class="search-form__input"
+            type="text"
+            id="searchInput"
+            placeholder="Search games..."
+            required
+          />
+          <button class="search-form__button" type="submit" aria-label="Search">
+            <svg
+              class="search-form__icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="11" cy="11" r="7"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </div>
+      </form>
+    </nav>
+
+    <!-- GAME LIST -->
+
+    <main>
+      <div class="controls">
+        <p id="resultsInfo" class="resultsInfo"><span>Showing: </span></p>
+        <div>
+          <label for="sortSelect">Sort:</label>
+          <select id="sortSelect">
+            <option value="default">Default</option>
+            <option value="a-z">A - Z</option>
+            <option value="z-a">Z - A</option>
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="games-grid" id="gamesGrid">
+        <div class="game-card">
+          <img src="www.placeholder.com" alt="">
+          <h2 class="game-card__title">Game Title</h2>
+          <p class="game-card__genre">Game Genre</p>
+        </div>
+
+        <div class="game-card__cover-placeholder">
+          Game Cover <br> Not Avalible
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+
+    <footer>
+      <p>Created by Simplified.org. Powered by FreeToGame.</p>
+    </footer>
+  </body>
 </html>
