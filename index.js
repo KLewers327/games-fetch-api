@@ -51,6 +51,7 @@ function updateView() {
             : `<div class="game-card__cover-placeholder">Game Cover <br> Not Available</div>`}
           <h2 class="game-card__title">${game.title}</h2>
           <p class="game-card__genre">${game.genre.trim()} • ${game.platform}</p>
+          <p class="game-card__release-date">Released: ${game.release_date}</p>
         </a>
       `).join('')
     : `<p>No games found matching "${searchInput.value}".</p>`;

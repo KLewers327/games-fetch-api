@@ -191,6 +191,13 @@ main {
   font-weight: 500;
 }
 
+.game-card__release-date {
+  font-size: 0.85rem;
+  color: #c77dff;
+  margin: -8px 16px 16px;
+  font-weight: 500;
+}
+
 /* --- FOOTER --- */
 
 footer {
